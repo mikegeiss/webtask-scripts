@@ -2,7 +2,7 @@ const requestPromise = require('request-promise');
 const SlackBot = require('slackbots');
 
 module.exports = function (context, callback) {
-  var bot = new SlackBot({token: context.secrets.slackbotToken, name: context.secrets.slackbotName});
+  let bot = new SlackBot({token: context.secrets.slackbotToken, name: context.secrets.slackbotName});
 
   ladeITunesDaten().then(result => {
     vergleicheAppInfos(result.current, result.expected);
@@ -13,23 +13,22 @@ module.exports = function (context, callback) {
   }
 
   function vergleicheAppInfos(actual, expected) {
+    let isPreisGeaendert = false;
     actual.forEach(currentItem => {
-      var expectedItem = expected.find(x => x.id === currentItem.id);
+      const expectedItem = expected.find(x => x.id === currentItem.id);
       if (!expected) {
-        var fehlerText = 'kein Vergleichobjekt';
+        const fehlerText = 'kein Vergleichobjekt';
         poste(fehlerText);
         throw Error(fehlerText);
       }
       if (expectedItem.price !== currentItem.price) {
-        var text = "Preis von " + currentItem.name + " hat sich geändert: " + expectedItem.price + " -> " + currentItem.price;
+        const text = "Preis von " + currentItem.name + " hat sich geändert: " + expectedItem.price + " -> " + currentItem.price;
         poste(text);
         console.log(text);
-        callback(null, {"aenderungen": true, lastCalled: new Date().toUTCString()});
-      }
-      else {
-        callback(null, {"aenderungen": false, lastCalled: new Date().toUTCString()});
+        isPreisGeaendert = true;
       }
     });
+    callback(null, {"aenderungen": isPreisGeaendert, lastCalled: new Date().toUTCString()});
   }
 
   function poste(text) {
