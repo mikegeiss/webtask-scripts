@@ -30,7 +30,7 @@ module.exports = function (context, callback) {
         isPreisGeaendert = true;
       }
     });
-    callback(null, {"aenderungen": isPreisGeaendert, lastCalled: new Date().toUTCString()});
+    callback(null, {"aenderungen": isPreisGeaendert, lastCalled: new Date().toLocaleDateString('de-DE') + ' - ' + new Date().toLocaleTimeString('de-DE')});
   }
 
   function poste(text) {
