@@ -13,15 +13,10 @@ module.exports = function (context, callback) {
   });
 
   function ladeDatenAusStorage() {
-    return new Promise((resolve, reject) => {
-      context.storage.get(function (error, data) {
-        if (error) {
-          reject(error)
-        }
-        else {
-          resolve(data)
-        }
-      });
+    return requestPromise({
+      url: context.secrets.storageServiceUrl,
+      json: true,
+      headers: {authtoken: context.secrets.authtoken}
     });
   }
 
