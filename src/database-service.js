@@ -11,13 +11,12 @@ app.get('/', function (req, res) {
   }
   loadStorage(req.webtaskContext.storage).then( (result) => {
     res.end(JSON.stringify(result));
-  })
-
+  });
 });
 
 app.post('/', function (req, res) {
   if (req.headers.authtoken !== req.webtaskContext.secrets.authtoken) {
-    res.end("Not authorized")
+    res.end("Not authorized");
   }
   updateStorage(req.webtaskContext.storage, req.body).then( (result) => {
     res.end(result);
@@ -48,9 +47,9 @@ function updateStorage(storage, values) {
       let response = [];
       values.forEach(appInfo => {
         const storageAppInfo = data.find(x => {
-          return x.id == appInfo.id;
+          return x.id === appInfo.id;
         });
-        if (appInfo.price !== null && appInfo.price !== undefined && storageAppInfo.price != appInfo.price) {
+        if (appInfo.price !== null && appInfo.price !== undefined && storageAppInfo.price !== appInfo.price) {
           response.push({"old": appInfo, "newPrice": appInfo.price});
           const index = data.indexOf(storageAppInfo);
           storageAppInfo.price = appInfo.price;
